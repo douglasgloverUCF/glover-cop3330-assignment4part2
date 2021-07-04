@@ -8,19 +8,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ListManagerModelTest {
     @Test
-    void app_can_store_100_lists() {
-        //call addList one hundred times with random data
-        //assert that the size of resulting listCollection is 100
-    }
-
-    @Test
-    void one_list_can_store_100_items() {
-        //create a list
-        //call addItem one hundred times with random data
-        //assert that the size of the list is 100
-    }
-
-    @Test
     void newList_creates_new_list_with_name() {
         //create a list with specific name
         //assert that the list name is equal to name given
