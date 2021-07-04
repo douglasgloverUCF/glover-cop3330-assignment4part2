@@ -1,0 +1,68 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+Class ListManager {
+    main()
+    start()
+}
+Class ListManagerController {
+    model: ListManagerModel
+    listDisplay: TableView
+    listNavigator: ListView
+    listTab: Tab
+
+    newListButtonClicked()
+    deleteListButtonClicked()
+    renameListButtonClicked()
+    openListButtonClicked()
+    addItemButtonClicked()
+    deleteItemButtonClicked()
+    editItemButtonClicked()
+    flipStatusClicked()
+    includeIncompleteButtonClicked()
+    includeCompleteButtonClicked()
+    saveAllButtonClicked()
+    saveButtonClicked()
+    loadButtonClicked()
+}
+Class ListManagerModel {
+    listCollection: ArrayList<List>
+    newList()
+    deleteList()
+    renameList()
+    addItem()
+    removeItem()
+    setItemDesc()
+    setItemDate()
+    setStatus()
+    display()
+    saveAll()
+    saveList()
+    loadLists()
+}
+
+Class List {
+    name: String
+    items: ArrayList<listItem>
+
+    updateName(String newDesc)
+    addItem(String desc, String date)
+    deleteItem(int index)
+}
+Class ListItem {
+    desc: String
+    date: String
+    status: boolean
+
+    updateDesc(String newDesc)
+    updateDate(String newDate)
+    updateStatus(boolean newStatus)
+}
+ListManager -|> org.javafx.Application
+ListManager -- ListManagerController
+ListManagerController *--> ListManagerModel
+ListManagerModel *-> List
+List *-> ListItem
+
+
+@enduml
