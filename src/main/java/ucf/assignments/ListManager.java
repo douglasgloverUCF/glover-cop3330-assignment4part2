@@ -21,11 +21,11 @@ public class ListManager extends Application {
     @Override
     public void start(Stage primaryStage) {
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("ucf.assignments.ListManager.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource("ListManager.fxml"));
             Scene scene = new Scene(root);
 
             primaryStage.setScene(scene);
-            primaryStage.setTitle("ucf.assignments.List Manager");
+            primaryStage.setTitle("List Manager");
             primaryStage.show();
         }
         catch (IOException e)

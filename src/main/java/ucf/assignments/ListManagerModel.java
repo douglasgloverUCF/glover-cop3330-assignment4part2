@@ -4,68 +4,65 @@
  */
 package ucf.assignments;
 
-import java.util.ArrayList;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 public class ListManagerModel {
-    ArrayList<List> listCollection = new ArrayList<List>();
-    List newList(String name) {
-        //create new list object in listCollection
-        //set name to given name
-        //return list
-        return null;
+    private ObservableList<ListItem> currentList = FXCollections.observableArrayList();
+    private int currentIndex;
+    void newList() {
+        currentList = FXCollections.observableArrayList();
     }
-    void deleteList(List input) {
-        //delete list
+    void addItem(String desc, String date) {
+        ListItem item = new ListItem(desc, date, "");
+        if (currentIndex != -1)
+            currentList.add(currentIndex, item);
+        else
+            currentList.add(item);
+        currentIndex = -1;
     }
-    List renameList(List input) {
-        //delete list
-        //return list
-        return null;
+    void selectItem(int index)
+    {
+        currentIndex = index;
     }
-    List addItem(List input, String desc, String date) {
-        //call list addItem method with data
-        //return list
-        return null;
+    void removeItem() {
+        currentList.remove(currentIndex);
     }
-    List removeItem(List input, int index) {
-        //call list deleteItem method with index
-        //return list
-        return null;
+    void editItem(String desc, String date) {
+        ListItem item = new ListItem(desc, date, "");
+        currentList.set(currentIndex, item);
     }
-    List setItemDesc(List input, int index, String desc) {
-        //get item at list index
-        //call listItem updateDesc method with data
-        //return list
-        return null;
+    String getSelectedItemDesc() {
+        return currentList.get(currentIndex).getDesc();
     }
-    List setItemDate(List input, int index, String date) {
-        //get item at list index
-        //call listItem updateDate method with data
-        //return list
-        return null;
+    String getSelectedItemDate() {
+        return currentList.get(currentIndex).getDate();
     }
-    List setStatus(List input, int index, Boolean status) {
-        //get item at list index
-        //call listItem updateStatus method with data
-        //return list
-        return null;
+    void flipStatus(int index) {
+        ListItem item = currentList.get(index);
+        if(item.getStatus().equals(""))
+            item.setStatus("X");
+        else
+            item.setStatus("");
+        currentList.set(index, item);
     }
-    List display(List input, String setting, Boolean status) {
-        //check setting and status
-        //create new list, removing or adding items based on status
-        //return new list
-        return null;
+    ObservableList<ListItem> display(Boolean complete, Boolean incomplete) {
+        //create a new empty list
+        ObservableList<ListItem> displayList = FXCollections.observableArrayList();
+        for (ListItem item : currentList) {
+            if (complete && item.getStatus().equals("X"))
+                displayList.add(item);
+            if (incomplete && item.getStatus().equals(""))
+                displayList.add(item);
+        }
+        //return list created
+        return displayList;
     }
-    void saveList(List input, String directory) {
+    void saveList(String directory) {
         //save list to file at given directory
     }
-    void saveAll(String directory) {
-        //saves all lists in listCollection to file at given directory
-    }
-    List loadLists(String directory) {
+    void loadList(String directory) {
         //load list from file at given directory
-        //add each list to collection
-        //return list
-        return null;
     }
+
 }

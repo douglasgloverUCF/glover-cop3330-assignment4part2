@@ -1,19 +1,41 @@
 package ucf.assignments;
 
+import javafx.beans.property.SimpleStringProperty;
+
 public class ListItem {
-    String desc;
-    String date;
-    boolean status;
-    void updateDesc(String newDesc)
+    private final SimpleStringProperty desc;
+    private final SimpleStringProperty date;
+    private final SimpleStringProperty status;
+
+    public ListItem(String desc, String date, String status)
     {
-        //update desc
+        this.desc = new SimpleStringProperty(desc);
+        this.date = new SimpleStringProperty(date);
+        this.status = new SimpleStringProperty(status);
     }
-    void updateDate(String newDate)
+
+    public String getDesc()
     {
-        //update date
+        return desc.get();
     }
-    void updateStatus(boolean newStatus)
+    public String getDate()
     {
-        //update status
+        return date.get();
+    }
+    public String getStatus()
+    {
+        return status.get();
+    }
+    public void setDesc(String newDesc)
+    {
+        this.desc.set(newDesc);
+    }
+    public void setDate(String newDate)
+    {
+        this.date.set(newDate);
+    }
+    public void setStatus(String newStatus)
+    {
+        this.status.set(newStatus);
     }
 }

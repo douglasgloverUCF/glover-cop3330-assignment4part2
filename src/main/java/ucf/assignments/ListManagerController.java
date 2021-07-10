@@ -4,111 +4,127 @@
  */
 package ucf.assignments;
 
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.ListView;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TableView;
+import javafx.scene.Node;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.Stage;
+
+import java.time.LocalDate;
+
 
 public class ListManagerController {
-    private static ListManagerModel model = new ListManagerModel();
+    static final ListManagerModel model = new ListManagerModel();
+    static final ItemWindowModel popupModel = new ItemWindowModel();
     @FXML
-    private TableView<String> listDisplay = new TableView<String>();
+    private TableView<ListItem> listDisplay;
     @FXML
-    private ListView<String> listNavigator = new ListView<String>();
+    private TableColumn<ListItem, String> descColumn;
     @FXML
-    private Tab listTab = new Tab();
+    private TableColumn<ListItem, String> dateColumn;
+    @FXML
+    private TableColumn<ListItem, String> statusColumn;
+    @FXML
+    private CheckMenuItem completeStatus;
+    @FXML
+    private CheckMenuItem incompleteStatus;
+
+
+    private boolean complete = true;
+    private boolean incomplete = true;
+    private int currentIndex = -1;
 
     @FXML
-    public void newListButtonClicked(ActionEvent actionEvent) {
-        //open a small input window
-        //collect name
-        //use model to create list with name
-        //display new item in listDisplay
-        //update listNavigator with new data
+    public void mainWindowEntered(MouseEvent mouseEvent) {
+        refreshList();
     }
     @FXML
-    public void deleteListButtonClicked(ActionEvent actionEvent) {
-        //get list selected from listNavigator
-        //use model to delete list
-        //clear listTab
-        //update listNavigator with new data
+    public void initialize()
+    {
+        try {
+            descColumn.setCellValueFactory(new PropertyValueFactory<ListItem, String>("desc"));
+            dateColumn.setCellValueFactory(new PropertyValueFactory<ListItem, String>("date"));
+            statusColumn.setCellValueFactory(new PropertyValueFactory<ListItem, String>("status"));
+            refreshList();
+        }
+        catch(Exception e)
+        {
+            //fix later
+        }
     }
-    @FXML
-    public void renameListButtonClicked(ActionEvent actionEvent) {
-        //get list selected from listNavigator
-        //open a small input window
-        //collect new name
-        //use model to rename list
-        //display new list on listTab
-        //display new list on listNavigator
-    }
-    @FXML
-    public void openListButtonClicked(ActionEvent actionEvent) {
-        //get list selected from listNavigator
-        //display list on listDisplay
-    }
+
     @FXML
     public void addItemButtonClicked(ActionEvent actionEvent) {
-        //open a small input window
-        //collect new description and date
-        //use model to create item with data
-        //display new item in listDisplay
-    }
-    @FXML
-    public void deleteItemButtonClicked(ActionEvent actionEvent) {
-        //get item selected from listDisplay
-        //use model to delete item
-        //display new list in listDisplay
+        popupModel.createWindow("CreateItem.fxml", "Add Item");
     }
     @FXML
     public void editItemButtonClicked(ActionEvent actionEvent) {
-        //get item selected from listDisplay
-        //open a small input window
-        //collect new description and date
-        //use model to update item with data
-        //display new list in listDisplay
+        if(currentIndex != -1)
+            popupModel.createWindow("CreateItem.fxml", "Edit Item");
     }
     @FXML
-    public void flipStatusClicked(MouseEvent mouseEvent) {
-        //get item selected from listDisplay
-        //get item status
-        //use model to invert status
-        //display new list in listDisplay
+    public void deleteItemButtonClicked(ActionEvent actionEvent) {
+        if(currentIndex != -1)
+            model.removeItem();
+        refreshList();
+        currentIndex = -1;
+    }
+
+    @FXML
+    public void includeCompleteButtonClicked(ActionEvent actionEvent) {
+        //get complete status
+        complete = completeStatus.isSelected();
+        //display new list on listDisplay
+        refreshList();
     }
 
     @FXML
     public void includeIncompleteButtonClicked(ActionEvent actionEvent) {
-        //get list selected from listNavigator
-        //check button status
-        //use model to change display settings according to status
-        //display new list
+        //get incomplete status
+        incomplete = incompleteStatus.isSelected();
+        //display new list on listDisplay
+        refreshList();
     }
+
     @FXML
-    public void includeCompleteButtonClicked(ActionEvent actionEvent) {
-        //get list selected from listNavigator
-        //check button status
-        //use model to change display settings according to status
-        //display new list
+    public void clearListButtonClicked(ActionEvent actionEvent) {
+        model.newList();
+        refreshList();
     }
-    @FXML
-    public void saveAllButtonClicked(ActionEvent actionEvent) {
-        //get lists from listNavigator
-        //get directory
-        //use model to save all lists at directory
-    }
+
     @FXML
     public void saveButtonClicked(ActionEvent actionEvent) {
-        //get selected list from listNavigator
-        //get directory
-        //use model to save list
+        //model.saveList();
     }
+
     @FXML
     public void loadButtonClicked(ActionEvent actionEvent) {
-        //get directory
-        //use model to load list from directory
-        //display list on listNavigator
-        //display list on listDisplay
+        //model.loadList();
+    }
+    @FXML
+    public void tableClicked(MouseEvent mouseEvent) {
+        currentIndex = listDisplay.getSelectionModel().getSelectedIndex();
+        model.selectItem(currentIndex);
+    }
+    @FXML
+    public void tableRightClicked(ContextMenuEvent contextMenuEvent) {
+        try {
+            currentIndex = listDisplay.getSelectionModel().getSelectedIndex();
+            model.flipStatus(currentIndex);
+            refreshList();
+        }
+        catch (Exception e) {
+            //No bueno
+        }
+    }
+
+    public void refreshList()
+    {
+        ObservableList<ListItem> newList = model.display(complete, incomplete);
+        listDisplay.setItems(newList);
     }
 }

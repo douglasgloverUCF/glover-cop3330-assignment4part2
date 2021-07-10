@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckMenuItem?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.effect.ColorAdjust?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Line?>
+
+<AnchorPane onMouseEntered="#mainWindowEntered" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ucf.assignments.ListManagerController">
+   <children>
+      <ToolBar layoutX="522.0" layoutY="24.0" prefHeight="40.0" prefWidth="79.0">
+         <items>
+            <Button mnemonicParsing="false" onAction="#clearListButtonClicked" prefHeight="25.0" prefWidth="65.0" text="Clear List">
+               <effect>
+                  <ColorAdjust />
+               </effect>
+            </Button>
+         </items>
+      </ToolBar>
+      <ToolBar layoutY="24.0" prefHeight="40.0" prefWidth="523.0">
+        <items>
+          <Button mnemonicParsing="false" onAction="#addItemButtonClicked" text="Add Item" />
+            <Button mnemonicParsing="false" onAction="#editItemButtonClicked" text="Edit Item" />
+            <Button mnemonicParsing="false" onAction="#deleteItemButtonClicked" text="Delete Item" />
+            <Line endX="-100.0" endY="25.0" layoutX="176.0" layoutY="13.0" startX="-100.0" stroke="#c6c6c6" />
+            <MenuButton mnemonicParsing="false" text="Include...">
+               <items>
+                  <CheckMenuItem fx:id="completeStatus" mnemonicParsing="false" onAction="#includeCompleteButtonClicked" selected="true" text="Complete" />
+                  <CheckMenuItem fx:id="incompleteStatus" mnemonicParsing="false" onAction="#includeIncompleteButtonClicked" selected="true" text="Incomplete" />
+               </items>
+            </MenuButton>
+        </items>
+      </ToolBar>
+      <TableView fx:id="listDisplay" layoutY="64.0" onContextMenuRequested="#tableRightClicked" onMouseClicked="#tableClicked" prefHeight="337.0" prefWidth="601.0">
+        <columns>
+          <TableColumn fx:id="statusColumn" editable="false" prefWidth="24.0" resizable="false" sortable="false" />
+          <TableColumn fx:id="descColumn" editable="false" prefWidth="492.0" text="Description" />
+            <TableColumn fx:id="dateColumn" editable="false" prefWidth="72.0" text="Date" />
+        </columns>
+      </TableView>
+      <MenuBar layoutY="2.0" prefHeight="25.0" prefWidth="601.0">
+        <menus>
+          <Menu mnemonicParsing="false" text="File">
+            <items>
+                  <MenuItem mnemonicParsing="false" onAction="#saveButtonClicked" text="Save List..." />
+                  <MenuItem mnemonicParsing="false" onAction="#loadButtonClicked" text="Load List..." />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Help">
+            <items>
+              <MenuItem mnemonicParsing="false" text="About" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+   </children>
+</AnchorPane>
