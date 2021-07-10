@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ucf.assignments.ListManagerController">
+   <children>
+      <Text layoutX="32.0" layoutY="38.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Adding Items to list:&#10;Click Add Item button at top of window.&#10;In pop up window, enter a description and date.&#10;Press Set button.&#10;&#10;Removing Items from list:&#10;Select an item in the list (it should be highlighted).&#10;Click Delete Item button at top of window.&#10;&#10;Clearing list:&#10;Click Clear List button at top of window.&#10;&#10;Editing Item description and date:&#10;Select an item in the list (it should be highlighted).&#10;Click Edit Item button at top of window.&#10;In pop up window, edit the description and date.&#10;Press Set button.&#10;&#10;&#10;&#10;&#10;&#10;Dedicated to Rey" wrappingWidth="300.0" />
+      <Text layoutX="323.0" layoutY="38.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Marking items as complete and incomplete:&#10;Right click any item in list.&#10;An X should appear on the right of the item,&#10;indicating it is complete.&#10;Right click again to mark as incomplete.&#10;&#10;Display all, only incomplete, or only complete:&#10;Click Include... button at top of window.&#10;In the dropdown menu, uncheck or check&#10;incomplete or complete.&#10;&#10;Save list:&#10;Click File button at very top of window.&#10;In the dropdown menu, select Save List...&#10;Select file location and input file name.&#10;Click save.&#10;&#10;Load list:&#10;Click File button at very top of window.&#10;In the dropdown menu, select Load List...&#10;Click file to open.&#10;&#10;" wrappingWidth="269.0" />
+   </children>
+</AnchorPane>

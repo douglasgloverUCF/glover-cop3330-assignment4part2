@@ -30,16 +30,4 @@ public class ListItem {
     {
         return status.get();
     }
-    public void setDesc(String newDesc)
-    {
-        this.desc.set(newDesc);
-    }
-    public void setDate(String newDate)
-    {
-        this.date.set(newDate);
-    }
-    public void setStatus(String newStatus)
-    {
-        this.status.set(newStatus);
-    }
 }

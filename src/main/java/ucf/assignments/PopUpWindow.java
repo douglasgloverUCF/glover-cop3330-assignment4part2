@@ -11,7 +11,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class ItemWindowModel {
+public class PopUpWindow {
     public final Stage popup = new Stage();
     void createWindow(String path, String title) {
         try {

@@ -7,19 +7,18 @@ package ucf.assignments;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.stage.Stage;
+import javafx.stage.FileChooser;
 
-import java.time.LocalDate;
+import java.io.File;
 
 
 public class ListManagerController {
     static final ListManagerModel model = new ListManagerModel();
-    static final ItemWindowModel popupModel = new ItemWindowModel();
+    static final PopUpWindow popupModel = new PopUpWindow();
     @FXML
     private TableView<ListItem> listDisplay;
     @FXML
@@ -98,12 +97,21 @@ public class ListManagerController {
 
     @FXML
     public void saveButtonClicked(ActionEvent actionEvent) {
-        //model.saveList();
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save list");
+        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("All Files", "*.*"));
+        File saveFile = fileChooser.showSaveDialog(listDisplay.getScene().getWindow());
+        model.saveList(saveFile);
     }
 
     @FXML
     public void loadButtonClicked(ActionEvent actionEvent) {
-        //model.loadList();
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Load list");
+        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("All Files", "*.*"));
+        File loadFile = fileChooser.showOpenDialog(listDisplay.getScene().getWindow());
+        model.loadList(loadFile);
     }
     @FXML
     public void tableClicked(MouseEvent mouseEvent) {
@@ -114,17 +122,23 @@ public class ListManagerController {
     public void tableRightClicked(ContextMenuEvent contextMenuEvent) {
         try {
             currentIndex = listDisplay.getSelectionModel().getSelectedIndex();
-            model.flipStatus(currentIndex);
+            model.flipStatus();
             refreshList();
         }
         catch (Exception e) {
-            //No bueno
+            //no index selected
         }
     }
 
     public void refreshList()
     {
+        model.display(!complete, !incomplete);
         ObservableList<ListItem> newList = model.display(complete, incomplete);
         listDisplay.setItems(newList);
+    }
+
+    public void helpButtonClicked(ActionEvent actionEvent) {
+        System.out.print("Help!");
+        popupModel.createWindow("Help.fxml", "Help");
     }
 }

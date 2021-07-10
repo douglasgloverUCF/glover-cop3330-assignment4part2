@@ -24,7 +24,7 @@ public class CreateItemController extends ListManagerController{
         if (popupModel.popup.getTitle().equals("Edit Item")) {
             String descCurrent = model.getSelectedItemDesc();
             descriptionInput.setText(descCurrent);
-            if(!model.getSelectedItemDesc().equals("")) {
+            if(!descCurrent.equals("")) {
                 String dateCurrent = model.getSelectedItemDate();
                 LocalDate date = LocalDate.parse(dateCurrent);
                 dateInput.setValue(date);
@@ -45,10 +45,9 @@ public class CreateItemController extends ListManagerController{
             dateString = "";
         }
         if(popupModel.popup.getTitle().equals("Add Item"))
-            model.addItem(desc, dateString);
+            model.addItem(desc, dateString, " ");
         else if (popupModel.popup.getTitle().equals("Edit Item"))
             model.editItem(desc, dateString);
-
         popupModel.closeWindow();
     }
     @FXML

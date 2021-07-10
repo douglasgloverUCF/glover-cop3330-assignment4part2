@@ -7,62 +7,80 @@ Class ListManager {
 }
 Class ListManagerController {
     model: ListManagerModel
+    popupModel: PopUpWindow
     listDisplay: TableView
-    listNavigator: ListView
-    listTab: Tab
+    descColumn: TableColumn<ListItem, String>
+    dateColumn: TableColumn<ListItem, String>
+    statusColumn: TableColumn<ListItem, String>
+    completeStatus: CheckMenuItem
+    incompleteStatus: CheckMenuItem
+    complete: boolean
+    incomplete: boolean
+    currentIndex: int
 
-    newListButtonClicked()
-    deleteListButtonClicked()
-    renameListButtonClicked()
-    openListButtonClicked()
+    mainWindowEntered()
+    initialize()
     addItemButtonClicked()
-    deleteItemButtonClicked()
     editItemButtonClicked()
-    flipStatusClicked()
-    includeIncompleteButtonClicked()
+    deleteItemButtonClicked()
     includeCompleteButtonClicked()
-    saveAllButtonClicked()
+    includeIncompleteButtonClicked()
+    clearListButtonClicked()
     saveButtonClicked()
     loadButtonClicked()
+    tableClicked()
+    tableRightClicked()
+    refreshList()
+    helpButtonClicked()
 }
 Class ListManagerModel {
-    listCollection: ArrayList<List>
+    currentList: ObservableList<ListItem>
+    currentIndex: int
+
     newList()
-    deleteList()
-    renameList()
-    addItem()
+    addItem(String desc, String date, String status)
+    selectItem(int index)
     removeItem()
-    setItemDesc()
-    setItemDate()
-    setStatus()
-    display()
-    saveAll()
-    saveList()
-    loadLists()
+    editItem(String desc, String date)
+    getSelectedItemDesc()
+    getSelectedItemDate()
+    flipStatus()
+    display(Boolean complete, Boolean incomplete)
+    saveList(File file)
+    loadList(File file)
 }
 
-Class List {
-    name: String
-    items: ArrayList<listItem>
-
-    updateName(String newDesc)
-    addItem(String desc, String date)
-    deleteItem(int index)
-}
 Class ListItem {
-    desc: String
-    date: String
-    status: boolean
+    desc: SimpleStringProperty
+    date: SimpleStringProperty
+    status: SimpleStringProperty
 
-    updateDesc(String newDesc)
-    updateDate(String newDate)
-    updateStatus(boolean newStatus)
+    ListItem(String desc, String date, String status)
+    getDesc()
+    getDate()
+    getStatus()
 }
+
+Class CreateItemController {
+    descriptionInput: TextArea
+    dateInput: DatePicker
+
+    initialize()
+    addButtonClicked()
+    CancelButtonClicked()
+}
+Class PopUpWindow {
+    popup: Stage
+    createWindow(String path, String title)
+    closeWindow()
+}
+
 ListManager -|> org.javafx.Application
 ListManager -- ListManagerController
 ListManagerController *--> ListManagerModel
-ListManagerModel *-> List
-List *-> ListItem
-
+ListManagerModel *-> ListItem
+ListManagerController *--> PopUpWindow
+PopUpWindow -- CreateItemController
+CreateItemController <-- ListManagerController
 
 @enduml
