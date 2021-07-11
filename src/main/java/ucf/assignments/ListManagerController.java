@@ -14,6 +14,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
 
 import java.io.File;
+import java.io.IOException;
 
 
 public class ListManagerController {
@@ -44,33 +45,33 @@ public class ListManagerController {
     @FXML
     public void initialize()
     {
-        try {
-            descColumn.setCellValueFactory(new PropertyValueFactory<ListItem, String>("desc"));
-            dateColumn.setCellValueFactory(new PropertyValueFactory<ListItem, String>("date"));
-            statusColumn.setCellValueFactory(new PropertyValueFactory<ListItem, String>("status"));
-            refreshList();
-        }
-        catch(Exception e)
-        {
-            //fix later
-        }
+        //connect table columns to appropriate ListItem variables
+        descColumn.setCellValueFactory(new PropertyValueFactory<ListItem, String>("desc"));
+        dateColumn.setCellValueFactory(new PropertyValueFactory<ListItem, String>("date"));
+        statusColumn.setCellValueFactory(new PropertyValueFactory<ListItem, String>("status"));
     }
 
     @FXML
     public void addItemButtonClicked(ActionEvent actionEvent) {
+        //open Add Item window
         popupModel.createWindow("CreateItem.fxml", "Add Item");
     }
     @FXML
     public void editItemButtonClicked(ActionEvent actionEvent) {
+        //open Edit Item Window if an index is selected
         if(currentIndex != -1)
             popupModel.createWindow("CreateItem.fxml", "Edit Item");
     }
     @FXML
     public void deleteItemButtonClicked(ActionEvent actionEvent) {
-        if(currentIndex != -1)
+        //use removeItem method if an index is selected
+        if(currentIndex != -1) {
             model.removeItem();
+            //deselect any selected index
+            currentIndex = -1;
+        }
+        //display new list on listDisplay
         refreshList();
-        currentIndex = -1;
     }
 
     @FXML
@@ -91,38 +92,50 @@ public class ListManagerController {
 
     @FXML
     public void clearListButtonClicked(ActionEvent actionEvent) {
+        //call newList method
         model.newList();
+        //display new list on listDisplay
         refreshList();
     }
 
     @FXML
     public void saveButtonClicked(ActionEvent actionEvent) {
-
+        //create and launch a filechooser
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save list");
         fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("All Files", "*.*"));
+        //get file for saving
         File saveFile = fileChooser.showSaveDialog(listDisplay.getScene().getWindow());
+        //call saveList method with save file
         model.saveList(saveFile);
     }
 
     @FXML
     public void loadButtonClicked(ActionEvent actionEvent) {
+        //create and launch a filechooser
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Load list");
         fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("All Files", "*.*"));
+        //get file to load
         File loadFile = fileChooser.showOpenDialog(listDisplay.getScene().getWindow());
+        //call loadList method with file
         model.loadList(loadFile);
     }
     @FXML
     public void tableClicked(MouseEvent mouseEvent) {
+        //determine selected index in table
         currentIndex = listDisplay.getSelectionModel().getSelectedIndex();
-        model.selectItem(currentIndex);
+        //update model's selected index using selectItem method
+        model.selectItem(currentIndex, complete, incomplete);
     }
     @FXML
     public void tableRightClicked(ContextMenuEvent contextMenuEvent) {
         try {
+            //determine index that was right clicked
             currentIndex = listDisplay.getSelectionModel().getSelectedIndex();
+            //invert status of item at index using flipStatus method
             model.flipStatus();
+            //display new list on listDisplay
             refreshList();
         }
         catch (Exception e) {
@@ -132,13 +145,14 @@ public class ListManagerController {
 
     public void refreshList()
     {
-        model.display(!complete, !incomplete);
+        //create a new list with appropriate items using display method
         ObservableList<ListItem> newList = model.display(complete, incomplete);
+        //set list to listDisplay
         listDisplay.setItems(newList);
     }
 
     public void helpButtonClicked(ActionEvent actionEvent) {
-        System.out.print("Help!");
+        //open Help window
         popupModel.createWindow("Help.fxml", "Help");
     }
 }

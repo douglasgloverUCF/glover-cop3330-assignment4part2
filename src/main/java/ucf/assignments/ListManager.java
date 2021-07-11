@@ -21,9 +21,10 @@ public class ListManager extends Application {
     @Override
     public void start(Stage primaryStage) {
         try {
+            //get fxml
             Parent root = FXMLLoader.load(getClass().getResource("ListManager.fxml"));
             Scene scene = new Scene(root);
-
+            //initialize stage
             primaryStage.setScene(scene);
             primaryStage.setTitle("List Manager");
             primaryStage.show();

@@ -21,10 +21,13 @@ public class CreateItemController extends ListManagerController{
     @FXML
     public void initialize()
     {
+        //if the opened window is for editing
         if (popupModel.popup.getTitle().equals("Edit Item")) {
+            //set text in input window to item's description
             String descCurrent = model.getSelectedItemDesc();
             descriptionInput.setText(descCurrent);
             if(!descCurrent.equals("")) {
+                //set date in input window to item's date
                 String dateCurrent = model.getSelectedItemDate();
                 LocalDate date = LocalDate.parse(dateCurrent);
                 dateInput.setValue(date);
@@ -33,9 +36,10 @@ public class CreateItemController extends ListManagerController{
     }
     @FXML
     public void addButtonClicked(ActionEvent actionEvent) {
-
+        //get the text in the description input box
         String desc = descriptionInput.getText();
         String dateString;
+        //get the date in the date input box
         try {
             LocalDate date = dateInput.getValue();
             dateString = date.toString();
@@ -44,14 +48,18 @@ public class CreateItemController extends ListManagerController{
         {
             dateString = "";
         }
+        //if the item is being added call addItem method
         if(popupModel.popup.getTitle().equals("Add Item"))
             model.addItem(desc, dateString, " ");
+        //if the item is being edited call editItem method
         else if (popupModel.popup.getTitle().equals("Edit Item"))
             model.editItem(desc, dateString);
+        //close window
         popupModel.closeWindow();
     }
     @FXML
     public void CancelButtonClicked(ActionEvent actionEvent) {
+        //close window
         popupModel.closeWindow();
     }
 }
