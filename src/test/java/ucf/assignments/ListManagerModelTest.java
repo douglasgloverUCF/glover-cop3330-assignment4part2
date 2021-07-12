@@ -1,129 +1,232 @@
 package ucf.assignments;
 
+import javafx.collections.ObservableList;
+import javafx.stage.FileChooser;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
-import java.util.ArrayList;
 
+import java.io.File;
+import java.util.Scanner;
+
+import static javafx.collections.FXCollections.observableArrayList;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ListManagerModelTest {
+    ListManagerModel model = new ListManagerModel();
     @Test
-    void newList_creates_new_list_with_name() {
-        //create a list with specific name
-        //assert that the list name is equal to name given
+    void newList_clears_list_of_items() {
+        //call newList
+        model.newList();
+        //get list with display
+        ObservableList<ListItem> newList = model.display(true, true);
+        //assert that list is empty
+        assertTrue(newList.isEmpty());
     }
 
     @Test
-    void deleteList_deletes_list_from_data_given_name() {
-        //create several lists different names
-        //call deleteList with a specific names
-        //assert that listCollection does not contain deleted list
+    void addItem_adds_new_item_to_list() {
+        //clear list
+        model.newList();
+        //use addItem to create item with data
+        model.addItem("Example Description", "2021-01-01", " ");
+        //get new list
+        ObservableList<ListItem> newList = model.display(true, true);
+        //get item data from list
+        String itemDesc = newList.get(0).getDesc();
+        //assert that item data is identical
+        assertEquals("Example Description", itemDesc);
     }
 
     @Test
-    void renameList_changes_list_name_to_given_name() {
-        //create list
-        //call renameList with list and new name
-        //assert that list name is equal to name given
+    void removeItem_removes_selected_item_from_list() {
+        //clear list
+        model.newList();
+        //add items to list
+        model.addItem("Example Description", "2021-01-01", " ");
+        model.addItem("Example Description 2", "2021-02-02", " ");
+        model.addItem("Example Description 3", "2021-03-03", " ");
+        //get list
+        ObservableList<ListItem> beforeList = model.display(true, true);
+        //get item at specific index
+        ListItem beforeItem = beforeList.get(1);
+        //select index
+        model.selectItem(1, true, true);
+        //remove item from list at index
+        model.removeItem();
+        //get new list
+        ObservableList<ListItem> afterList = model.display(true, true);
+        //get item at same index
+        ListItem afterItem = afterList.get(1);
+        //assert that items are different
+        assertNotEquals(beforeItem, afterItem);
     }
 
     @Test
-    void addItem_adds_item_to_list_with_given_description() {
-        //create list
-        //add item with specific description
-        //assert that item description matches description given
+    void editItem_changes_description() {
+        //clear list
+        model.newList();
+        //use addItem to create item with data
+        model.addItem("Example Description", "2021-01-01", " ");
+        //select item
+        model.selectItem(0, true, true);
+        //use editItem to edit item with new data
+        model.editItem("Edited Description", "2021-02-02");
+        //get item
+        ListItem item = model.display(true, true).get(0);
+        //assert that item data is updated to new data
+        assertEquals("Edited Description", item.getDesc());
     }
 
     @Test
-    void addItem_adds_item_to_list_with_given__date() {
-        //create list
-        //add item with specific date
-        //assert that item date matches date given
+    void editItem_changes_date() {
+        //clear list
+        model.newList();
+        //use addItem to create item with data
+        model.addItem("Example Description", "2021-01-01", " ");
+        //select item
+        model.selectItem(0, true, true);
+        //use editItem to edit item with new data
+        model.editItem("Edited Description", "2021-02-02");
+        //get item
+        ListItem item = model.display(true, true).get(0);
+        //assert that item data is updated to new data
+        assertEquals("2021-02-02", item.getDate());
     }
 
     @Test
-    void removeItem_removes_specific_item_from_list() {
-        //create list
-        //add several items
-        //call removeItem with specific index
-        //assert that item at index is not the same as original item at index
+    void flipStatus_marks_complete() {
+        //clear list
+        model.newList();
+        //use addItem to create item with incomplete status
+        model.addItem("Example Description", "2021-01-01", " ");
+        //select item
+        model.selectItem(0, true, true);
+        //use flipStatus to change status to complete
+        model.flipStatus();
+        //get item
+        ListItem item = model.display(true, true).get(0);
+        //assert that item data is updated to new data
+        assertEquals("X", item.getStatus());
     }
 
     @Test
-    void setItemDesc_updates_description_for_specific_item() {
-        //create list
-        //add item with specific description
-        //call setItemDesc with item and new description
-        //assert that item description matches new description
+    void flipStatus_marks_incomplete() {
+        //clear list
+        model.newList();
+        //use addItem to create item with complete status
+        model.addItem("Example Description", "2021-01-01", "X");
+        //select item
+        model.selectItem(0, true, true);
+        //use flipStatus to change status to incomplete
+        model.flipStatus();
+        //get item
+        ListItem item = model.display(true, true).get(0);
+        //assert that item data is updated to new data
+        assertEquals(" ", item.getStatus());
     }
 
-    @Test
-    void setItemDate_updates_date_for_specific_item() {
-        //create list
-        //add item with specific date
-        //call setItemDate with item and new date
-        //assert that item description matches new date
-    }
-
-    @Test
-    void setStatus_marks_as_complete() {
-        //create list
-        //add item with status set to false
-        //call setStatus with item and true boolean
-        //assert that item status is true
-    }
-    @Test
-    void display_displays_all_items() {
-        //create list
+    @ParameterizedTest
+    @ValueSource(ints = {0, 1, 2})
+    void display_returns_all_items(int index) {
+        //create list of items
+        ListItem item1 = new ListItem("Example Description", "2021-01-01", "X");
+        ListItem item2 = new ListItem("Example Description 2", "2021-02-02", " ");
+        ListItem item3 = new ListItem("Example Description 3", "2021-03-03", "X");
+        ObservableList<ListItem> expectedList = observableArrayList(item1, item2, item3);
+        //clear list
+        model.newList();
         //add items with different statuses
-        //call display with setting complete set to true
-        //call display with setting incomplete set to true
-        //assert that list displays all items given
+        model.addItem("Example Description", "2021-01-01", "X");
+        model.addItem("Example Description 2", "2021-02-02", " ");
+        model.addItem("Example Description 3", "2021-03-03", "X");
+        //get list using display given parameters of complete and incomplete items
+        ObservableList<ListItem> displayList = model.display(true, true);
+        //assert that data in lists is identical
+        assertEquals(expectedList.get(index).getDesc(), displayList.get(index).getDesc());
     }
-    @Test
-    void display_displays_only_uncompleted() {
-        //create list
+
+    @ParameterizedTest
+    @ValueSource(ints = {0, 1})
+    void display_returns_only_complete(int index) {
+        //create list of items with only complete
+        ListItem item1 = new ListItem("Example Description", "2021-01-01", "X");
+        ListItem item3 = new ListItem("Example Description 3", "2021-03-03", "X");
+        ObservableList<ListItem> expectedList = observableArrayList(item1, item3);
+        //clear list
+        model.newList();
         //add items with different statuses
-        //call display with setting complete set to false
-        //call display with setting incomplete set to true
-        //assert that list displays only incomplete items
+        model.addItem("Example Description", "2021-01-01", "X");
+        model.addItem("Example Description 2", "2021-02-02", " ");
+        model.addItem("Example Description 3", "2021-03-03", "X");
+        //get list using display given parameters of only complete items
+        ObservableList<ListItem> displayList = model.display(true, false);
+        //assert that data in lists is identical
+        assertEquals(expectedList.get(index).getDesc(), displayList.get(index).getDesc());
     }
+
     @Test
-    void display_displays_only_completed() {
-        //create list
+    void display_returns_only_incomplete() {
+        //create list of items with only incomplete
+        ListItem item2 = new ListItem("Example Description 2", "2021-02-02", " ");
+        ObservableList<ListItem> expectedList = observableArrayList(item2);
+        //clear list
+        model.newList();
         //add items with different statuses
-        //call display with setting complete set to true
-        //call display with setting incomplete set to false
-        //assert that list displays only complete items
+        model.addItem("Example Description", "2021-01-01", "X");
+        model.addItem("Example Description 2", "2021-02-02", " ");
+        model.addItem("Example Description 3", "2021-03-03", "X");
+        //get list using display given parameters of only incomplete items
+        ObservableList<ListItem> displayList = model.display(false, true);
+        //assert that data in lists is identical
+        assertEquals(expectedList.get(0).getDesc(), displayList.get(0).getDesc());
     }
+
     @Test
-    void saveList_saves_selected_list() {
-        //create list with name
-        //call saveList with name and specific directory
-        //get file at directory
-        //convert file to list
-        //assert that list is equal to given list
+    void saveList_saves_to_file() {
+        //clear list
+        model.newList();
+        //add items to list
+        model.addItem("Example Description", "2021-01-01", " ");
+        model.addItem("Example Description 2", "2021-02-02", "X");
+        model.addItem("Example Description 3", "2021-03-03", " ");
+        //create file to save to
+        File saveFile = new File("testfiles/test.file");
+        //save list to file
+        model.saveList(saveFile);
+        //read file
+        try {
+            Scanner sc = new Scanner(saveFile);
+            String line = sc.nextLine();
+            //assert that file saved data as formatted text
+            assertEquals("Example Description:2021-01-01: ", line);
+        }
+        catch(Exception e){fail();}
     }
-    @Test
-    void saveAll_saves_several_lists() {
-        //create several list with different names
-        //call saveAll with specific directory
-        //get files at directory
-        //convert files to lists
-        //assert that lists are equal to given lists
-    }
-    @Test
-    void loadLists_loads_single_file() {
-        //create list
-        //call saveList with given list and specific directory
-        //call loadLists with specific directory
-        //assert that returned list is original list
-    }
-    @Test
-    void loadLists_loads_multiple_files() {
-        //create lists
-        //call saveAll with specific directory
-        //call loadLists with specific directory
-        //assert that returned lists are original lists
+
+    @ParameterizedTest
+    @ValueSource(ints = {0, 1, 2})
+    void loadList_loads_from_file(int index) {
+        //clear list
+        model.newList();
+        //add items to list
+        model.addItem("Example Description", "2021-01-01", " ");
+        model.addItem("Example Description 2", "2021-02-02", "X");
+        model.addItem("Example Description 3", "2021-03-03", " ");
+        //get list
+        ObservableList<ListItem> expectedList = model.display(true, true);
+        //create file to save to
+        File file = new File("testfiles/test.file");
+        //save list to file
+        model.saveList(file);
+        //clear list
+        model.newList();
+        //load list from file
+        model.loadList(file);
+        //get loaded list
+        ObservableList<ListItem> loadedList = model.display(true, true);
+        //assert that lists contain same data
+        assertEquals(loadedList.get(index).getDesc(), expectedList.get(index).getDesc());
     }
 }

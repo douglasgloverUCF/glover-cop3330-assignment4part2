@@ -14,7 +14,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
 
 import java.io.File;
-import java.io.IOException;
 
 
 public class ListManagerController {

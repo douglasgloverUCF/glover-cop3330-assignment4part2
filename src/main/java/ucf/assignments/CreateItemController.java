@@ -8,10 +8,8 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextArea;
-import javafx.util.converter.LocalDateStringConverter;
 
 import java.time.LocalDate;
-import java.time.chrono.ChronoLocalDate;
 
 public class CreateItemController extends ListManagerController{
     @FXML
